@@ -1,0 +1,132 @@
+spring:
+  profiles:
+    active: local
+---
+server:
+  port: 8081
+
+logging:
+  level:
+    yongs:
+      temp: DEBUG
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF
+      
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: example-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:8080"
+            allow-credentials: true
+            allowed-headers: "*"
+            allowedMethods:
+            - GET
+            - HEAD
+            - POST
+            - PUT
+            - DELETE
+      # default-filters:
+      # - name: SomePreFilter # <-- 전체 서비스에 filter 적용
+      routes:
+      - id: example-user
+        uri: lb://example-user
+        predicates:
+        - Path=/user/**
+      - id: example-product
+        uri: lb://example-product
+        predicates:
+        - Path=/product/**
+      - id: example-order
+        uri: lb://example-order
+        predicates:
+        - Path=/order/**
+      - id: example-delivery
+        uri: lb://example-delivery
+        predicates:
+        - Path=/delivery/**,/trace/**
+                                
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: localhost
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+      
+---
+server:
+  port: 8080
+  
+logging:
+  level:
+    yongs:
+      temp: INFO
+      
+spring:
+  config:
+    activate:
+      on-profile: container
+  application:
+    name: example-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:7070"
+            allow-credentials: true
+            allowedHeaders:
+              - x-requested-with
+              - authorization
+              - content-type
+              - credential
+              - X-AUTH-TOKEN
+              - X-CSRF-TOKEN
+            allowedMethods:
+            - GET
+            - HEAD
+            - POST
+            - PUT
+            - DELETE
+      # default-filters:
+      # - name: SomePreFilter # <-- 전체 서비스에 filter 적용
+      routes:
+      - id: example-user
+        uri: lb://example-user
+        predicates:
+        - Path=/user/**
+      - id: example-product
+        uri: lb://example-product
+        predicates:
+        - Path=/product/**
+      - id: example-order
+        uri: lb://example-order
+        predicates:
+        - Path=/order/**
+      - id: example-delivery
+        uri: lb://example-delivery
+        predicates:
+        - Path=/delivery/**,/trace/**
+                
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: example-eureka
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
