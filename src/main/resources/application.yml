@@ -58,6 +58,7 @@ eureka:
   instance:
     preferIpAddress: true
     hostname: localhost
+    instanceId: ${spring.application.name}:${random.value}
   client:
     registerWithEureka: true
     fetchRegistry: true
@@ -124,6 +125,7 @@ eureka:
   instance:
     preferIpAddress: true
     hostname: example-eureka
+    instanceId: ${spring.application.name}:${random.value}
   client:
     registerWithEureka: true
     fetchRegistry: true
