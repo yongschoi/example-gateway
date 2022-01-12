@@ -86,7 +86,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://example-ui"
+            allowedOrigins: "*"
             allow-credentials: true
             allowedHeaders: "*"
             allowedMethods:
